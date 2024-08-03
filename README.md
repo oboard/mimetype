@@ -15,7 +15,7 @@ moon add oboard/mimetype
 For the full version (800+ MIME types, 1,000+ extensions):
 
 ```rust
-let mime = mime::new()
+let mime = @mimetype.new()
 mime.getType("txt")                    // ⇨ "text/plain"
 mime.getExtension("text/plain")        // ⇨ "txt"
 ```
