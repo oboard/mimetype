@@ -22,12 +22,12 @@ pub fn T::new() -> T {
 
 pub fn T::getType(self : T, pathOrExtension : String) -> String? {
   let mut extension = if pathOrExtension.contains(".") {
-    pathOrExtension.split(".").rev()[0]
+    pathOrExtension.split(".").to_array().rev()[0]
   } else {
     pathOrExtension
   }
   if extension.contains(";") {
-    extension = extension.split(";")[0]
+    extension = extension.split(";").to_array()[0]
   }
   extension = extension.trim_space().to_lower()
   self.extentionToType.get(extension)
