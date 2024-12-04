@@ -1,4 +1,4 @@
-pub struct T {
+pub(readonly) struct T {
   extentionToType : Map[String, String]
   typeToExtension : Map[String, String]
   typeToExtensions : Map[String, Array[String]]
