@@ -1,72 +1,73 @@
-pub(readonly) struct T {
-  extentionToType : Map[String, String]
-  typeToExtension : Map[String, String]
-  typeToExtensions : Map[String, Array[String]]
+///|
+pub struct T {
+  extention_to_type : @hashmap.T[String, String]
+  type_to_extension : @hashmap.T[String, String]
+  type_to_extensions : @hashmap.T[String, FixedArray[String]]
 }
 
+///|
 pub fn T::new() -> T {
-  let typesIter = types.iter()
-  fn chooseFirst(item : (String, Array[String])) -> (String, String) {
-    (item.0, item.1[0])
-  }
-
   {
-    extentionToType: typesIter.flat_map(
-      fn { (k, xs) => xs.map(fn(x) { (x, k) }).iter() },
-    ).to_array()
-    |> Map::from_array,
-    typeToExtension: typesIter.map(chooseFirst).to_array() |> Map::from_array,
-    typeToExtensions: types,
+    extention_to_type: types
+    .iter()
+    .flat_map(fn { (k, xs) => xs.iter().map(fn(x) { (x, k) }) })
+    |> @hashmap.from_iter(),
+    type_to_extension: types.iter().map(fn { (t, e) => (t, e[0]) })
+    |> @hashmap.from_iter(),
+    type_to_extensions: types.iter() |> @hashmap.from_iter(),
   }
 }
 
-pub fn T::getType(self : T, pathOrExtension : String) -> String? {
-  let mut extension = if pathOrExtension.contains(".") {
-    pathOrExtension.split(".").to_array().rev()[0]
-  } else {
-    pathOrExtension
-  }
-  if extension.contains(";") {
-    extension = extension.split(";").to_array()[0]
-  }
-  extension = extension.trim_space().to_lower()
-  self.extentionToType.get(extension)
+///|
+pub fn T::get_type(self : T, path_or_extension : String) -> String? {
+  let after_dot = path_or_extension.split(".").last().or(path_or_extension)
+  let extension = after_dot
+    .split(";")
+    .head()
+    .or(after_dot)
+    .trim_space()
+    .to_lower()
+  self.extention_to_type.get(extension)
 }
 
-pub fn T::getExtension(self : T, mimeType : String) -> String? {
-  let mime = mimeType.trim_space().to_lower()
-  self.typeToExtension.get(mime)
+///|
+pub fn T::get_extension(self : T, mime_type : String) -> String? {
+  let mime = mime_type.trim_space().to_lower()
+  self.type_to_extension[mime]
 }
 
-pub fn T::getAllExtensions(self : T, mimeType : String) -> Array[String] {
-  let mime = mimeType.trim_space().to_lower()
-  self.typeToExtensions.get(mime).or([])
+///|
+pub fn T::get_all_extensions(self : T, mime_type : String) -> Iter[String] {
+  let mime = mime_type.trim_space().to_lower()
+  self.type_to_extensions[mime].or([]).iter()
 }
 
+///|
 test {
   let mime = T::new()
   inspect!(
-    mime.getType("txt"),
+    mime.get_type("txt"),
     content=
       #|Some("text/plain")
     ,
   )
   inspect!(
-    mime.getType("main.js"),
+    mime.get_type("main.js"),
     content=
       #|Some("text/javascript")
     ,
   )
   inspect!(
-    mime.getExtension("text/html"),
+    mime.get_extension("text/html"),
     content=
       #|Some("html")
     ,
   )
   inspect!(
-    mime.getAllExtensions("image/jpeg"),
+    mime.get_all_extensions("image/jpeg"),
     content=
       #|["jpeg", "jpg", "jpe"]
     ,
   )
+  inspect!(mime.get_extension("text/html; charset=utf8"), content="None")
 }
