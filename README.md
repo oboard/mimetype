@@ -14,50 +14,50 @@ moon add oboard/mimetype
 
 For the full version (800+ MIME types, 1,000+ extensions):
 
-```rust
+```moonbit
 let mime = @mimetype.new()
-mime.getType("txt")                    // ⇨ "text/plain"
-mime.getExtension("text/plain")        // ⇨ "txt"
+mime.get_type("txt")                    // ⇨ "text/plain"
+mime.get_extension("text/plain")        // ⇨ Some("txt")
 ```
 
 ## API
 
-### `mime.getType(pathOrExtension)`
+### `mime.get_type(path_or_extension)`
 
 Get mime type for the given file path or extension. E.g.
 
-```rust
-mime.getType("js") // ⇨ "text/javascript"
-mime.getType("json") // ⇨ "application/json"
+```moonbit
+mime.get_type("js") // ⇨ "text/javascript"
+mime.get_type("json") // ⇨ "application/json"
 
-mime.getType("txt") // ⇨ "text/plain"
-mime.getType("dir/text.txt") // ⇨ "text/plain"
-mime.getType("dir\\text.txt") // ⇨ "text/plain"
-mime.getType(".text.txt") // ⇨ "text/plain"
-mime.getType(".txt") // ⇨ "text/plain"
+mime.get_type("txt") // ⇨ "text/plain"
+mime.get_type("dir/text.txt") // ⇨ "text/plain"
+mime.get_type("dir\\text.txt") // ⇨ "text/plain"
+mime.get_type(".text.txt") // ⇨ "text/plain"
+mime.get_type(".txt") // ⇨ "text/plain"
 ```
 
-`null` is returned in cases where an extension is not detected or recognized
+`None` is returned in cases where an extension is not detected or recognized
 
-```rust
-mime.getType("foo/txt") // ⇨ null
-mime.getType("bogus_type") // ⇨ null
+```moonbit
+mime.get_type("foo/txt") // ⇨ None
+mime.get_type("bogus_type") // ⇨ None
 ```
 
-### `mime.getExtension(type)`
+### `mime.get_extension(type)`
 
 Get file extension for the given mime type. Charset options (often included in Content-Type headers) are ignored.
 
-```rust
-mime.getExtension("text/plain") // ⇨ "txt"
-mime.getExtension("application/json") // ⇨ "json"
-mime.getExtension("text/html; charset=utf8") // ⇨ "html"
+```moonbit
+mime.get_extension("text/plain") // ⇨ Some("txt")
+mime.get_extension("application/json") // ⇨ Some("json")
+mime.get_extension("text/html; charset=utf8") // ⇨ Some("html")
 ```
 
-### `mime.getAllExtensions(type)`
+### `mime.get_all_extensions(type)`
 
 Get all file extensions for the given mime type.
 
-```rust
-mime.getAllExtensions("image/jpeg") // ⇨ Set(3) { "jpeg", "jpg", "jpe" }
+```moonbit
+mime.get_all_extensions("image/jpeg") // ⇨ ["jpeg", "jpg", "jpe"]
 ```
