@@ -6,6 +6,27 @@ pub struct T {
 }
 
 ///|
+/// Creates a new MIME type database with mappings between file extensions and
+/// MIME types.
+///
+/// Returns a new MIME type database containing:
+///
+/// * A mapping from file extensions to MIME types
+/// * A mapping from MIME types to their default file extensions
+/// * A mapping from MIME types to all their associated file extensions
+///
+/// Example:
+///
+/// ```moonbit
+/// ///|
+/// test "T::new" {
+///   let mime = T::new()
+///   // Check if the database correctly maps extension to MIME type
+///   inspect!(mime.get_type("txt"), content="Some(\"text/plain\")")
+///   // Check if the database correctly maps MIME type to extension
+///   inspect!(mime.get_extension("text/html"), content="Some(\"html\")")
+/// }
+/// ```
 pub fn T::new() -> T {
   {
     extention_to_type: types
@@ -27,19 +48,20 @@ pub fn T::get_type(self : T, path_or_extension : String) -> String? {
     .or(after_dot)
     .trim_space()
     .to_lower()
+    .to_string()
   self.extention_to_type.get(extension)
 }
 
 ///|
 pub fn T::get_extension(self : T, mime_type : String) -> String? {
-  let mime = mime_type.trim_space().to_lower()
-  self.type_to_extension[mime]
+  let mime = mime_type.trim_space().to_lower().to_string()
+  self.type_to_extension.get(mime)
 }
 
 ///|
 pub fn T::get_all_extensions(self : T, mime_type : String) -> Iter[String] {
-  let mime = mime_type.trim_space().to_lower()
-  self.type_to_extensions[mime].or([]).iter()
+  let mime = mime_type.trim_space().to_lower().to_string()
+  self.type_to_extensions.get(mime).or([]).iter()
 }
 
 ///|

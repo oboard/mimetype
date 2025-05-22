@@ -1,4 +1,30 @@
 ///|
+/// Defines a comprehensive mapping between MIME types and their corresponding
+/// file extensions.
+///
+/// This list includes standard MIME types (like "text/html", "image/jpeg") and
+/// vendor-specific MIME types (like "application/vnd.ms-excel",
+/// "application/vnd.android.package-archive"). Each MIME type is associated with
+/// one or more file extensions.
+///
+/// Extensions prefixed with "\*" indicate they are also used by other MIME
+/// types. For example, "\*xml" is used by both "text/xml" and "application/xml".
+///
+/// Returns an array of tuples, where each tuple contains a MIME type string and
+/// an array of associated file extensions.
+///
+/// Example:
+///
+/// ```moonbit
+/// ///|
+/// test "types" {
+///   let mime = T::new()
+///   // Look up extension for text/html
+///   inspect!(mime.get_extension("text/html"), content="Some(\"html\")")
+///   // Look up MIME type for .jpg
+///   inspect!(mime.get_type("jpg"), content="Some(\"image/jpeg\")")
+/// }
+/// ```
 let types : Array[(String, FixedArray[String])] = [
   // standard types
   ("application/andrew-inset", ["ez"]),
