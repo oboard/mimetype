@@ -20,9 +20,9 @@
 /// test "types" {
 ///   let mime = T::new()
 ///   // Look up extension for text/html
-///   inspect!(mime.get_extension("text/html"), content="Some(\"html\")")
+///   inspect(mime.get_extension("text/html"), content="Some(\"html\")")
 ///   // Look up MIME type for .jpg
-///   inspect!(mime.get_type("jpg"), content="Some(\"image/jpeg\")")
+///   inspect(mime.get_type("jpg"), content="Some(\"image/jpeg\")")
 /// }
 /// ```
 let types : Array[(String, FixedArray[String])] = [

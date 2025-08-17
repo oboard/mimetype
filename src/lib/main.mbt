@@ -31,9 +31,15 @@ pub fn T::new() -> T {
   {
     extention_to_type: types
     .iter()
-    .flat_map(fn { (k, xs) => xs.iter().map(fn(x) { (x, k) }) })
+    .flat_map(t => match t {
+      (k, xs) => xs.iter().map(fn(x) { (x, k) })
+    })
     |> @hashmap.from_iter(),
-    type_to_extension: types.iter().map(fn { (t, e) => (t, e[0]) })
+    type_to_extension: types
+    .iter()
+    .map(t => match t {
+      (t, e) => (t, e[0])
+    })
     |> @hashmap.from_iter(),
     type_to_extensions: types.iter() |> @hashmap.from_iter(),
   }
@@ -41,11 +47,14 @@ pub fn T::new() -> T {
 
 ///|
 pub fn T::get_type(self : T, path_or_extension : String) -> String? {
-  let after_dot = path_or_extension.split(".").last().or(path_or_extension)
+  let after_dot = path_or_extension
+    .split(".")
+    .last()
+    .unwrap_or(path_or_extension)
   let extension = after_dot
     .split(";")
     .head()
-    .or(after_dot)
+    .unwrap_or(after_dot)
     .trim_space()
     .to_lower()
     .to_string()
@@ -61,35 +70,35 @@ pub fn T::get_extension(self : T, mime_type : String) -> String? {
 ///|
 pub fn T::get_all_extensions(self : T, mime_type : String) -> Iter[String] {
   let mime = mime_type.trim_space().to_lower().to_string()
-  self.type_to_extensions.get(mime).or([]).iter()
+  self.type_to_extensions.get(mime).unwrap_or([]).iter()
 }
 
 ///|
 test {
   let mime = T::new()
-  inspect!(
+  inspect(
     mime.get_type("txt"),
-    content=
+    content=(
       #|Some("text/plain")
-    ,
+    ),
   )
-  inspect!(
+  inspect(
     mime.get_type("main.js"),
-    content=
+    content=(
       #|Some("text/javascript")
-    ,
+    ),
   )
-  inspect!(
+  inspect(
     mime.get_extension("text/html"),
-    content=
+    content=(
       #|Some("html")
-    ,
+    ),
   )
-  inspect!(
+  inspect(
     mime.get_all_extensions("image/jpeg"),
-    content=
+    content=(
       #|["jpeg", "jpg", "jpe"]
-    ,
+    ),
   )
-  inspect!(mime.get_extension("text/html; charset=utf8"), content="None")
+  inspect(mime.get_extension("text/html; charset=utf8"), content="None")
 }
