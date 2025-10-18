@@ -13,18 +13,6 @@
 /// Returns an array of tuples, where each tuple contains a MIME type string and
 /// an array of associated file extensions.
 ///
-/// Example:
-///
-/// ```moonbit
-/// ///|
-/// test "types" {
-///   let mime = T::new()
-///   // Look up extension for text/html
-///   inspect(mime.get_extension("text/html"), content="Some(\"html\")")
-///   // Look up MIME type for .jpg
-///   inspect(mime.get_type("jpg"), content="Some(\"image/jpeg\")")
-/// }
-/// ```
 let types : Array[(String, FixedArray[String])] = [
   // standard types
   ("application/andrew-inset", ["ez"]),

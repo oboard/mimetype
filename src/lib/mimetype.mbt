@@ -1,9 +1,12 @@
 ///|
-pub struct T {
-  extention_to_type : @hashmap.T[String, String]
-  type_to_extension : @hashmap.T[String, String]
-  type_to_extensions : @hashmap.T[String, FixedArray[String]]
+pub struct MimeType {
+  extention_to_type : @hashmap.HashMap[String, String]
+  type_to_extension : @hashmap.HashMap[String, String]
+  type_to_extensions : @hashmap.HashMap[String, FixedArray[String]]
 }
+
+///|
+pub typealias MimeType as T
 
 ///|
 /// Creates a new MIME type database with mappings between file extensions and
@@ -14,20 +17,7 @@ pub struct T {
 /// * A mapping from file extensions to MIME types
 /// * A mapping from MIME types to their default file extensions
 /// * A mapping from MIME types to all their associated file extensions
-///
-/// Example:
-///
-/// ```moonbit
-/// ///|
-/// test "T::new" {
-///   let mime = T::new()
-///   // Check if the database correctly maps extension to MIME type
-///   inspect!(mime.get_type("txt"), content="Some(\"text/plain\")")
-///   // Check if the database correctly maps MIME type to extension
-///   inspect!(mime.get_extension("text/html"), content="Some(\"html\")")
-/// }
-/// ```
-pub fn T::new() -> T {
+pub fn MimeType::new() -> MimeType {
   {
     extention_to_type: types
     .iter()
@@ -46,7 +36,10 @@ pub fn T::new() -> T {
 }
 
 ///|
-pub fn T::get_type(self : T, path_or_extension : String) -> String? {
+pub fn MimeType::get_type(
+  self : MimeType,
+  path_or_extension : String,
+) -> String? {
   let after_dot = path_or_extension
     .split(".")
     .last()
@@ -62,20 +55,23 @@ pub fn T::get_type(self : T, path_or_extension : String) -> String? {
 }
 
 ///|
-pub fn T::get_extension(self : T, mime_type : String) -> String? {
+pub fn MimeType::get_extension(self : MimeType, mime_type : String) -> String? {
   let mime = mime_type.trim_space().to_lower().to_string()
   self.type_to_extension.get(mime)
 }
 
 ///|
-pub fn T::get_all_extensions(self : T, mime_type : String) -> Iter[String] {
+pub fn MimeType::get_all_extensions(
+  self : MimeType,
+  mime_type : String,
+) -> Iter[String] {
   let mime = mime_type.trim_space().to_lower().to_string()
   self.type_to_extensions.get(mime).unwrap_or([]).iter()
 }
 
 ///|
 test {
-  let mime = T::new()
+  let mime = MimeType::new()
   inspect(
     mime.get_type("txt"),
     content=(
