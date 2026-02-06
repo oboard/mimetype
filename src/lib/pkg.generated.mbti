@@ -1,27 +1,27 @@
 // Generated using `moon info`, DON'T EDIT IT
 package "oboard/mimetype/lib"
 
-import(
-  "moonbitlang/core/hashmap"
-)
+import {
+  "moonbitlang/core/hashmap",
+}
 
 // Values
 
 // Errors
 
 // Types and methods
+#alias(T)
 pub struct MimeType {
   extention_to_type : @hashmap.HashMap[String, String]
   type_to_extension : @hashmap.HashMap[String, String]
   type_to_extensions : @hashmap.HashMap[String, FixedArray[String]]
 }
-fn MimeType::get_all_extensions(Self, String) -> Iter[String]
-fn MimeType::get_extension(Self, String) -> String?
-fn MimeType::get_type(Self, String) -> String?
-fn MimeType::new() -> Self
+pub fn MimeType::get_all_extensions(Self, String) -> Iter[String]
+pub fn MimeType::get_extension(Self, String) -> String?
+pub fn MimeType::get_type(Self, String) -> String?
+pub fn MimeType::new() -> Self
 
 // Type aliases
-pub typealias MimeType as T
 
 // Traits
 

@@ -1,12 +1,10 @@
 ///|
+#alias(T)
 pub struct MimeType {
   extention_to_type : @hashmap.HashMap[String, String]
   type_to_extension : @hashmap.HashMap[String, String]
   type_to_extensions : @hashmap.HashMap[String, FixedArray[String]]
 }
-
-///|
-pub typealias MimeType as T
 
 ///|
 /// Creates a new MIME type database with mappings between file extensions and
@@ -21,14 +19,18 @@ pub fn MimeType::new() -> MimeType {
   {
     extention_to_type: types
     .iter()
-    .flat_map(t => match t {
-      (k, xs) => xs.iter().map(fn(x) { (x, k) })
+    .flat_map(t => {
+      match t {
+        (k, xs) => xs.iter().map(fn(x) { (x, k) })
+      }
     })
     |> @hashmap.from_iter(),
     type_to_extension: types
     .iter()
-    .map(t => match t {
-      (t, e) => (t, e[0])
+    .map(t => {
+      match t {
+        (t, e) => (t, e[0])
+      }
     })
     |> @hashmap.from_iter(),
     type_to_extensions: types.iter() |> @hashmap.from_iter(),
@@ -48,7 +50,7 @@ pub fn MimeType::get_type(
     .split(";")
     .head()
     .unwrap_or(after_dot)
-    .trim_space()
+    .trim()
     .to_lower()
     .to_string()
   self.extention_to_type.get(extension)
@@ -56,7 +58,7 @@ pub fn MimeType::get_type(
 
 ///|
 pub fn MimeType::get_extension(self : MimeType, mime_type : String) -> String? {
-  let mime = mime_type.trim_space().to_lower().to_string()
+  let mime = mime_type.trim().to_lower().to_string()
   self.type_to_extension.get(mime)
 }
 
@@ -65,7 +67,7 @@ pub fn MimeType::get_all_extensions(
   self : MimeType,
   mime_type : String,
 ) -> Iter[String] {
-  let mime = mime_type.trim_space().to_lower().to_string()
+  let mime = mime_type.trim().to_lower().to_string()
   self.type_to_extensions.get(mime).unwrap_or([]).iter()
 }
 
