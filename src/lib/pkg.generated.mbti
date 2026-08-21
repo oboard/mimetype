@@ -24,4 +24,3 @@ pub fn MimeType::new() -> Self
 // Type aliases
 
 // Traits
-

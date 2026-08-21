@@ -52,13 +52,13 @@ pub fn MimeType::get_type(
     .unwrap_or(after_dot)
     .trim()
     .to_lower()
-    .to_string()
+    .to_owned()
   self.extention_to_type.get(extension)
 }
 
 ///|
 pub fn MimeType::get_extension(self : MimeType, mime_type : String) -> String? {
-  let mime = mime_type.trim().to_lower().to_string()
+  let mime = mime_type.trim().to_lower().to_owned()
   self.type_to_extension.get(mime)
 }
 
@@ -67,36 +67,36 @@ pub fn MimeType::get_all_extensions(
   self : MimeType,
   mime_type : String,
 ) -> Iter[String] {
-  let mime = mime_type.trim().to_lower().to_string()
+  let mime = mime_type.trim().to_lower().to_owned()
   self.type_to_extensions.get(mime).unwrap_or([]).iter()
 }
 
 ///|
 test {
   let mime = MimeType::new()
-  inspect(
+  debug_inspect(
     mime.get_type("txt"),
     content=(
       #|Some("text/plain")
     ),
   )
-  inspect(
+  debug_inspect(
     mime.get_type("main.js"),
     content=(
       #|Some("text/javascript")
     ),
   )
-  inspect(
+  debug_inspect(
     mime.get_extension("text/html"),
     content=(
       #|Some("html")
     ),
   )
-  inspect(
-    mime.get_all_extensions("image/jpeg"),
+  debug_inspect(
+    mime.get_all_extensions("image/jpeg").collect(),
     content=(
       #|["jpeg", "jpg", "jpe"]
     ),
   )
-  inspect(mime.get_extension("text/html; charset=utf8"), content="None")
+  debug_inspect(mime.get_extension("text/html; charset=utf8"), content="None")
 }
